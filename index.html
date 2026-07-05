@@ -288,7 +288,7 @@ input:focus,textarea:focus{border-color:var(--green-mid)}
 
     <div class="regra-item"><b>O que enviar</b><span>Uma foto inspiradora registrada durante a sua trajetória no curso de Ciências Biológicas de Vila Rica — um momento de campo, laboratório, convivência ou descoberta que marcou esses anos.</span></div>
     <div class="regra-item"><b>Uma foto por pessoa</b><span>Cada participante concorre com uma única fotografia. Envie a que melhor representa a sua vivência.</span></div>
-    <div class="regra-item"><b>Quem pode participar</b><span>Estudantes com matrícula ativa no curso de Ciências Biológicas de Vila Rica.</span></div>
+    <div class="regra-item"><b>Quem pode participar</b><span>Estudantes com matrícula ativa nos cursos de Ciências Biológicas e Agronomia de Vila Rica. Serão aceitas até 50 fotos, por ordem de recebimento — atingido esse número, novas submissões não entram no concurso.</span></div>
     <div class="regra-item"><b>Como enviar</b><span>De 9 a 15 de julho, envie sua foto pelo WhatsApp do professor Joari, com: título da foto, breve contexto e seu nome. A organização publica nesta página as fotos recebidas dentro do prazo.</span></div>
     <div class="regra-item"><b>Quando votar</b><span>A votação acontece nos dias 16 e 17 de julho, encerrando às 17h do dia 17. Vote entrando com uma conta Google: cada pessoa tem um único voto, que pode ser trocado até o encerramento.</span></div>
     <div class="regra-item"><b>Encerramento e prêmio</b><span>A apuração é ao vivo no encerramento da Semana da Biologia, na noite de 17 de julho. As três fotos mais votadas recebem os prêmios de 1º, 2º e 3º lugar.</span></div>
@@ -355,6 +355,7 @@ const firebaseConfig = {
   appId: "1:834365654927:web:80bbecd4565200304eedfa"
 };
 const CODIGO_ORGANIZACAO = "semabio2026";
+const LIMITE_FOTOS = 50;
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
@@ -663,7 +664,20 @@ function entrarAdmin(){
   } else toast('Código incorreto.');
 }
 function atualizarContagemAdmin(){
-  document.getElementById('admContagem').textContent='Fotos publicadas: '+fotos.length;
+  const n = fotos.length;
+  const cont = document.getElementById('admContagem');
+  cont.textContent = 'Fotos publicadas: '+n+' / '+LIMITE_FOTOS;
+  const btn = document.getElementById('btnPublicar');
+  if(n >= LIMITE_FOTOS){
+    cont.textContent = 'Limite atingido: '+n+' / '+LIMITE_FOTOS+' — não é possível publicar mais.';
+    cont.style.background = 'var(--soil-light)';
+    cont.style.color = 'var(--soil)';
+    if(btn){ btn.disabled = true; btn.textContent = 'Limite de 50 fotos atingido'; }
+  } else {
+    cont.style.background = '';
+    cont.style.color = '';
+    if(btn && btn.textContent==='Limite de 50 fotos atingido'){ btn.disabled=false; btn.textContent='Publicar foto'; }
+  }
   const cont=document.getElementById('admListaFotos');
   if(!cont) return;
   if(fotos.length===0){ cont.className='adm-lista'; cont.innerHTML=''; return; }
@@ -758,6 +772,7 @@ function comprimir(file){
 }
 function publicarFoto(){
   if(!isAdmin)return;
+  if(fotos.length >= LIMITE_FOTOS){ toast('Limite de '+LIMITE_FOTOS+' fotos atingido. As próximas ficam fora.'); return; }
   const titulo=document.getElementById('fTitulo').value.trim();
   const autor=document.getElementById('fAutor').value.trim();
   if(!titulo){ toast('Dê um título à foto.'); return; }
