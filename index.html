@@ -91,6 +91,16 @@ input:focus,textarea:focus{border-color:var(--green-mid)}
 .btn-google:hover{border-color:var(--green-mid);background:#fafcfa}
 .btn-google img{width:20px;height:20px}
 .aviso-envio{font-size:.8rem;color:var(--ink-soft);text-align:center;margin-top:12px;line-height:1.5}
+.adm-lista{margin-bottom:14px;max-height:240px;overflow-y:auto;display:none}
+.adm-lista.on{display:block}
+.adm-foto{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f5f1}
+.adm-foto:last-child{border-bottom:none}
+.adm-foto .mini{width:44px;height:44px;border-radius:6px;object-fit:cover;background:#f4f0ea;flex-shrink:0}
+.adm-foto .info{flex:1;min-width:0}
+.adm-foto .info b{display:block;font-size:.84rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-foto .info span{font-size:.74rem;color:var(--ink-soft)}
+.adm-del{background:#fff;border:1.5px solid #e0b4b4;color:#b44;border-radius:8px;padding:6px 10px;font-size:.76rem;font-weight:800;cursor:pointer;flex-shrink:0}
+.adm-del:hover{background:#fdecec}
 .admin-status{background:var(--moss);border-radius:10px;padding:12px 14px;font-size:.82rem;color:var(--green-deep);margin-bottom:14px;font-weight:600;}
 .toggle-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border:1.5px solid var(--linha);border-radius:12px;margin-top:8px;}
 .toggle-linha .txt{font-size:.86rem;font-weight:700;color:var(--ink)}
@@ -233,6 +243,7 @@ input:focus,textarea:focus{border-color:var(--green-mid)}
     </div>
     <div id="adminPainel" style="display:none">
       <div class="admin-status" id="admContagem">Fotos publicadas: 0</div>
+      <div id="admListaFotos" class="adm-lista"></div>
 
       <div class="toggle-linha">
         <div class="txt">Votação aberta ao público
@@ -277,13 +288,13 @@ input:focus,textarea:focus{border-color:var(--green-mid)}
 
     <div class="regra-item"><b>O que enviar</b><span>Uma foto inspiradora registrada durante a sua trajetória no curso de Ciências Biológicas de Vila Rica — um momento de campo, laboratório, convivência ou descoberta que marcou esses anos.</span></div>
     <div class="regra-item"><b>Uma foto por pessoa</b><span>Cada participante concorre com uma única fotografia. Envie a que melhor representa a sua vivência.</span></div>
-    <div class="regra-item"><b>Quem pode participar</b><span>[DEFINIR: apenas alunos com matrícula ativa? ex-alunos? professores e técnicos também?]</span></div>
-    <div class="regra-item"><b>Como enviar</b><span>[DEFINIR: envie sua foto por (WhatsApp da organização / e-mail / entrega presencial) até (DATA e HORA). A organização publica as fotos recebidas nesta página.]</span></div>
-    <div class="regra-item"><b>Como funciona a votação</b><span>O público vota entrando com uma conta Google. Cada pessoa tem um único voto, que pode ser trocado a qualquer momento antes do encerramento. A votação só abre quando a organização libera.</span></div>
-    <div class="regra-item"><b>Encerramento e prêmio</b><span>A apuração acontece ao vivo no encerramento da Semana da Biologia, em 17 de julho. A foto mais votada recebe o prêmio.</span></div>
-    <div class="regra-item"><b>Em caso de empate</b><span>[DEFINIR: como o empate será decidido — voto da comissão organizadora? critério de data de envio?]</span></div>
+    <div class="regra-item"><b>Quem pode participar</b><span>Estudantes com matrícula ativa no curso de Ciências Biológicas de Vila Rica.</span></div>
+    <div class="regra-item"><b>Como enviar</b><span>De 9 a 15 de julho, envie sua foto pelo WhatsApp do professor Joari, com: título da foto, breve contexto e seu nome. A organização publica nesta página as fotos recebidas dentro do prazo.</span></div>
+    <div class="regra-item"><b>Quando votar</b><span>A votação acontece nos dias 16 e 17 de julho, encerrando às 17h do dia 17. Vote entrando com uma conta Google: cada pessoa tem um único voto, que pode ser trocado até o encerramento.</span></div>
+    <div class="regra-item"><b>Encerramento e prêmio</b><span>A apuração é ao vivo no encerramento da Semana da Biologia, na noite de 17 de julho. As três fotos mais votadas recebem os prêmios de 1º, 2º e 3º lugar.</span></div>
+    <div class="regra-item"><b>Em caso de empate</b><span>Se houver empate em uma posição, o prêmio daquela posição é dividido igualmente entre as fotos empatadas. Exemplo: empate em 1º divide os R$ 120 entre as empatadas. Empates que a divisão não resolva de forma justa serão decididos pela comissão organizadora.</span></div>
 
-    <div class="premio-tag" style="display:block;text-align:center">Prêmio especial de R$ 150 · patrocínio Nilo Sander</div>
+    <div class="premio-tag" style="display:block;text-align:center">1º lugar R$ 120 · 2º lugar R$ 80 · 3º lugar R$ 50 · patrocínio Instituto C3</div>
   </div>
 </div>
 
@@ -294,7 +305,7 @@ input:focus,textarea:focus{border-color:var(--green-mid)}
     <h3>Ranking do concurso</h3>
     <p class="sub">As fotos mais votadas até agora.</p>
     <div id="rankLista"></div>
-    <div class="premio-tag">Prêmio especial de R$ 150 · patrocínio Nilo Sander</div>
+    <div class="premio-tag">1º lugar R$ 120 · 2º lugar R$ 80 · 3º lugar R$ 50 · patrocínio Instituto C3</div>
   </div>
 </div>
 
@@ -651,7 +662,48 @@ function entrarAdmin(){
     atualizarContagemAdmin();
   } else toast('Código incorreto.');
 }
-function atualizarContagemAdmin(){ document.getElementById('admContagem').textContent='Fotos publicadas: '+fotos.length; }
+function atualizarContagemAdmin(){
+  document.getElementById('admContagem').textContent='Fotos publicadas: '+fotos.length;
+  const cont=document.getElementById('admListaFotos');
+  if(!cont) return;
+  if(fotos.length===0){ cont.className='adm-lista'; cont.innerHTML=''; return; }
+  cont.className='adm-lista on';
+  cont.innerHTML=fotos.map(f=>`
+    <div class="adm-foto" data-id="${f.id}">
+      <div class="mini" id="admmini-${f.id}"></div>
+      <div class="info"><b>${esc(f.titulo||'Sem título')}</b><span>${esc(f.autor||'')} · 🗳️ ${f.votos||0}</span></div>
+      <button class="adm-del" onclick="excluirFoto('${f.id}','${esc(f.titulo||'').replace(/'/g,"\\'")}')">Excluir</button>
+    </div>`).join('');
+  fotos.forEach(f=>carregarImagem(f.id,b=>{const el=document.getElementById('admmini-'+f.id);if(el)el.style.backgroundImage=`url(${b})`,el.style.backgroundSize='cover',el.style.backgroundPosition='center';}));
+}
+
+function excluirFoto(id, titulo){
+  if(!isAdmin)return;
+  const temVotos = (votosMap[id]||0)>0;
+  let aviso = 'Excluir a foto "'+titulo+'"? Esta ação não pode ser desfeita.';
+  if(temVotos && votacaoAberta){
+    aviso += '\n\nATENÇÃO: esta foto já tem votos E a votação está ABERTA. Excluir agora vai liberar de volta o voto de quem votou nela. O ideal é excluir só com a votação fechada.';
+  } else if(temVotos){
+    aviso += '\n\nEsta foto tem '+(votosMap[id]||0)+' voto(s). Quem votou nela poderá votar de novo em outra.';
+  }
+  if(!confirm(aviso)) return;
+
+  // Limpeza em cascata: meta, imagem, contagem, comentários e votos-de-usuário que apontavam para ela
+  refVotoUser.once('value').then(snap=>{
+    const updates={};
+    updates['fotosMeta/'+id]=null;
+    updates['fotosImg/'+id]=null;
+    updates['votosPorFoto/'+id]=null;
+    updates['comentarios/'+id]=null;
+    const vu=snap.val()||{};
+    Object.keys(vu).forEach(uid=>{ if(vu[uid]===id) updates['votoDoUsuario/'+uid]=null; });
+    db.update(updates).then(()=>{
+      delete imgCache[id];
+      toast('Foto excluída.');
+      setTimeout(atualizarContagemAdmin,400);
+    }).catch(err=>toast('Erro ao excluir: '+(err.message||err)));
+  }).catch(err=>toast('Erro ao ler votos: '+(err.message||err)));
+}
 function alternarVotacao(){
   if(!isAdmin)return;
   const novo=document.getElementById('admVotToggle').checked;
