@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Concurso de Fotografia · SEMABIO Vila Rica 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,400;9..144,0,600;9..144,0,700;9..144,1,400&family=Source+Sans+3:wght@400;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1c2b22; --ink-soft:#6a786f; --paper:#ffffff; --linha:#e2ede6;
+  --green-deep:#1f4d36; --green-mid:#3f7b54; --moss:#e7efe6;
+  --soil:#b9764a; --soil-light:#f3e3d6; --blue:#2a5f8f;
+  --sombra:0 18px 40px rgba(28,43,34,.12);
+}
+html,body{height:100%;background:var(--paper);font-family:'Source Sans 3',sans-serif;color:var(--ink);-webkit-tap-highlight-color:transparent;overflow-x:hidden;}
+
+/* Cabeçalho */
+header{max-width:960px;margin:0 auto;padding:22px 20px 8px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.brand h1{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:600;line-height:1.05;color:var(--green-deep);}
+.brand p{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--soil);margin-top:4px;font-weight:800}
+.h-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:none;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-weight:800;border-radius:12px;transition:transform .15s,box-shadow .15s,background .2s;}
+.btn:active{transform:scale(.96)}
+.btn-ghost{background:#fff;border:1.5px solid var(--linha);color:var(--ink-soft);padding:9px 13px;font-size:.8rem;}
+.btn-ghost:hover{border-color:var(--green-mid);color:var(--green-deep)}
+.chip-user{display:flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--linha);border-radius:22px;padding:7px 14px;font-size:.8rem;font-weight:800;cursor:pointer;color:var(--ink);}
+.chip-user b{color:var(--green-deep);font-weight:800}
+.chip-user img{width:22px;height:22px;border-radius:50%;object-fit:cover;}
+.contador{font-size:.74rem;color:var(--ink-soft);font-weight:800;white-space:nowrap}
+
+/* Aviso de voto */
+.faixa-voto{max-width:960px;margin:6px auto 0;padding:0 20px;}
+.faixa-voto .inner{background:var(--moss);border:1px solid var(--linha);border-radius:12px;padding:10px 16px;font-size:.82rem;color:var(--green-deep);font-weight:600;display:flex;align-items:center;gap:8px;justify-content:center;text-align:center;}
+
+/* Carrossel */
+.stage{position:relative;max-width:1100px;margin:10px auto 0;height:54vh;min-height:370px;max-height:540px;perspective:1400px;touch-action:pan-y;user-select:none;}
+.card{position:absolute;top:50%;left:50%;width:min(340px,72vw);cursor:pointer;background:#fff;padding:12px 12px 50px;border:1px solid var(--linha);border-radius:6px;box-shadow:var(--sombra);transform-origin:center center;transition:transform .45s cubic-bezier(.22,.9,.3,1),opacity .45s,filter .45s;will-change:transform,opacity;}
+.card.dragging{transition:none}
+.card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#f4f0ea;border-radius:3px;pointer-events:none;}
+.card .fita{position:absolute;top:-11px;left:50%;transform:translateX(-50%) rotate(-3deg);width:88px;height:24px;background:var(--green-mid);opacity:.9;border-radius:2px;box-shadow:0 2px 5px rgba(0,0,0,.12);}
+.card:nth-child(even) .fita{transform:translateX(-50%) rotate(2.5deg)}
+.card .legenda{position:absolute;left:0;right:0;bottom:9px;text-align:center;font-family:'Fraunces',serif;font-size:1.05rem;padding:0 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink);}
+.card .votos-mini{position:absolute;top:18px;right:18px;background:rgba(255,255,255,.94);border-radius:20px;padding:4px 10px;font-size:.72rem;font-weight:800;color:var(--green-deep);box-shadow:0 2px 8px rgba(0,0,0,.15);display:flex;align-items:center;gap:4px;}
+.card .selo-meu{position:absolute;top:18px;left:18px;background:var(--soil);color:#fff;border-radius:20px;padding:4px 10px;font-size:.66rem;font-weight:900;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.nav{position:absolute;top:50%;transform:translateY(-50%);z-index:30;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--linha);background:rgba(255,255,255,.92);color:var(--green-deep);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;backdrop-filter:blur(4px);}
+.nav:hover{border-color:var(--green-mid);background:#fff}
+#navL{left:12px}#navR{right:12px}
+
+/* Barra de ações */
+.acao-bar{max-width:680px;margin:14px auto 0;padding:0 20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.foto-info{text-align:center}
+.foto-info h2{font-family:'Fraunces',serif;font-size:1.4rem;line-height:1.15;color:var(--green-deep)}
+.foto-info p{font-size:.82rem;color:var(--ink-soft);margin-top:3px}
+.reacoes{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+.btn-votar{display:flex;align-items:center;gap:8px;padding:12px 26px;border-radius:26px;border:2px solid var(--green-mid);background:var(--green-mid);color:#fff;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:1rem;font-weight:800;transition:all .15s;}
+.btn-votar:hover{background:var(--green-deep);border-color:var(--green-deep);transform:translateY(-2px)}
+.btn-votar:active{transform:scale(.95)}
+.btn-votar.votado{background:#fff;color:var(--green-deep);border-color:var(--green-deep);cursor:default}
+.btn-votar.pop{animation:pop .35s ease}
+@keyframes pop{40%{transform:scale(1.18)}}
+.chip{display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:24px;border:1.5px solid var(--linha);background:#fff;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.9rem;font-weight:800;color:var(--ink-soft);transition:all .15s;}
+.chip:hover{border-color:var(--green-mid);transform:translateY(-2px)}
+.chip:active{transform:scale(.94)}
+.chip-coment{background:var(--blue);border-color:var(--blue);color:#fff}
+.chip-coment:hover{background:#204b70;color:#fff}
+.dots{display:flex;gap:5px;justify-content:center;margin:16px auto 30px;flex-wrap:wrap;max-width:70vw;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--linha);cursor:pointer;transition:all .3s;border:none;padding:0}
+.dot.on{width:20px;border-radius:4px;background:var(--green-mid)}
+
+/* Estados */
+.estado{max-width:440px;margin:60px auto;text-align:center;padding:0 20px;}
+.estado .icone{font-size:3rem;margin-bottom:10px}
+.estado h2{font-family:'Fraunces',serif;font-size:1.7rem;margin-bottom:8px;color:var(--green-deep)}
+.estado p{color:var(--ink-soft);font-size:.9rem;line-height:1.55;margin-bottom:18px}
+
+/* Modais */
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(28,43,34,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:#fff;border-radius:18px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:26px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.3);}
+.modal-box h3{font-family:'Fraunces',serif;font-size:1.5rem;margin-bottom:4px;color:var(--green-deep)}
+.modal-box .sub{font-size:.85rem;color:var(--ink-soft);margin-bottom:16px;line-height:1.5}
+.fechar{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:#f0f5f1;color:var(--ink-soft);font-size:1rem;cursor:pointer;z-index:5;}
+.fechar:hover{background:#e4ece6}
+label{display:block;font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin:14px 0 5px;}
+input[type=text],input[type=password],textarea{width:100%;border:1.5px solid var(--linha);border-radius:10px;padding:11px 13px;font-family:'Source Sans 3',sans-serif;font-size:.9rem;color:var(--ink);outline:none;background:#fff;resize:none;}
+input:focus,textarea:focus{border-color:var(--green-mid)}
+.drop{border:2px dashed var(--linha);border-radius:14px;padding:26px 16px;text-align:center;cursor:pointer;transition:border-color .2s;color:var(--ink-soft);font-size:.85rem;font-weight:700;}
+.drop:hover,.drop.over{border-color:var(--green-mid);color:var(--green-deep)}
+.previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.previews img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--linha)}
+.btn-salvar{width:100%;margin-top:20px;background:var(--green-mid);color:#fff;padding:14px;font-size:.95rem;box-shadow:0 6px 16px rgba(63,123,84,.32);}
+.btn-salvar:hover{background:var(--green-deep)}
+.btn-salvar:disabled{opacity:.55;cursor:wait}
+.btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1.5px solid var(--linha);color:var(--ink);padding:13px;font-size:.92rem;font-weight:800;border-radius:12px;cursor:pointer;margin-top:6px;transition:all .15s}
+.btn-google:hover{border-color:var(--green-mid);background:#fafcfa}
+.btn-google img{width:20px;height:20px}
+.aviso-envio{font-size:.8rem;color:var(--ink-soft);text-align:center;margin-top:12px;line-height:1.5}
+.barra-prog{height:6px;background:var(--linha);border-radius:4px;overflow:hidden;margin-top:12px;display:none}
+.barra-prog.on{display:block}
+.barra-prog i{display:block;height:100%;width:0;background:var(--green-mid);transition:width .2s}
+
+/* Visualizador */
+.viewer{position:fixed;inset:0;z-index:300;background:#fff;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .25s;}
+.viewer.open{opacity:1;pointer-events:all}
+.v-top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--linha);gap:10px;flex-shrink:0;flex-wrap:wrap;}
+.v-title{min-width:0;flex:1}
+.v-title h3{font-family:'Fraunces',serif;font-size:1.25rem;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--green-deep)}
+.v-title p{font-size:.74rem;color:var(--ink-soft);margin-top:2px}
+.v-tools{display:flex;gap:6px;flex-shrink:0;align-items:center}
+.tool{height:38px;min-width:38px;padding:0 12px;border-radius:10px;border:1.5px solid var(--linha);background:#fff;color:var(--ink-soft);font-size:.9rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;font-family:'Source Sans 3',sans-serif;}
+.tool:hover{border-color:var(--green-mid);color:var(--green-deep)}
+.tool-votar{background:var(--green-mid);border-color:var(--green-mid);color:#fff}
+.tool-votar:hover{background:var(--green-deep);color:#fff;border-color:var(--green-deep)}
+.tool-votar.votado{background:#fff;color:var(--green-deep)}
+.v-img{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden;background:#faf8f4;position:relative;}
+.v-img img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;transition:transform .35s;cursor:zoom-in;}
+.v-img img.zoom{cursor:zoom-out}
+.v-comentarios{flex-shrink:0;border-top:1px solid var(--linha);max-height:40vh;display:flex;flex-direction:column;background:#fff;}
+.c-head{padding:10px 16px 4px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.c-head span{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--green-deep)}
+.c-count{color:var(--ink-soft)!important}
+.c-lista{flex:1;overflow-y:auto;padding:4px 16px;min-height:60px}
+.c-item{padding:9px 0;border-bottom:1px solid #f0f5f1}
+.c-item:last-child{border-bottom:none}
+.c-autor{font-size:.78rem;font-weight:800;color:var(--green-deep);display:flex;align-items:center;gap:6px}
+.c-autor img{width:18px;height:18px;border-radius:50%}
+.c-texto{font-size:.88rem;line-height:1.45;margin-top:3px}
+.c-data{font-size:.68rem;color:#b6aea3;margin-top:2px}
+.sem-coment{font-size:.85rem;color:var(--ink-soft);font-style:italic;text-align:center;padding:16px 0}
+.c-form{flex-shrink:0;display:flex;gap:8px;padding:10px 16px 14px;border-top:1px solid #f0f5f1;align-items:flex-end;}
+.c-form textarea{flex:1}
+.c-form .btn-env{background:var(--blue);color:#fff;padding:11px 16px;font-size:.85rem;flex-shrink:0;}
+.c-login-aviso{padding:14px 16px;text-align:center;font-size:.84rem;color:var(--ink-soft);border-top:1px solid #f0f5f1}
+.c-login-aviso a{color:var(--green-deep);font-weight:800;cursor:pointer;text-decoration:underline}
+
+/* Ranking */
+.rank-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f0f5f1;cursor:pointer;}
+.rank-item:last-child{border-bottom:none}
+.rank-item img{width:58px;height:58px;object-fit:cover;border-radius:8px;border:1px solid var(--linha)}
+.rank-pos{font-size:1.4rem;width:36px;text-align:center}
+.rank-info{flex:1;min-width:0}
+.rank-info b{display:block;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.rank-info span{font-size:.76rem;color:var(--ink-soft)}
+.rank-votos{font-weight:900;color:var(--green-deep);font-size:.92rem;white-space:nowrap}
+
+/* Efeitos */
+.floater{position:fixed;bottom:-50px;z-index:890;font-size:2rem;pointer-events:none;animation:subir var(--dur) ease-out forwards;opacity:0;}
+@keyframes subir{0%{transform:translateY(0) translateX(0) rotate(0deg) scale(.6);opacity:0}12%{opacity:1}100%{transform:translateY(-105vh) translateX(var(--drift)) rotate(var(--giro)) scale(1.15);opacity:0}}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:30px;font-size:.85rem;font-weight:700;z-index:950;transition:transform .3s;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+.premio-tag{display:inline-block;margin-top:14px;font-size:.78rem;font-weight:800;color:var(--soil);background:var(--soil-light);padding:5px 12px;border-radius:20px}
+
+@media (max-width:560px){
+  header{padding:16px 14px 4px}
+  .brand h1{font-size:1.4rem}
+  .stage{height:48vh;min-height:320px}
+}
+@media (prefers-reduced-motion:reduce){.card{transition:none}.floater{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>Concurso de Fotografia</h1>
+    <p>SEMABIO · Vila Rica · MT · 2026</p>
+  </div>
+  <div class="h-actions">
+    <span class="contador" id="contador"></span>
+    <button class="btn btn-ghost" id="btnRank" title="Ranking">🏆 Ranking</button>
+    <button class="chip-user" id="chipUser" title="Entrar para votar">👤 <b id="userNome">entrar</b></button>
+  </div>
+</header>
+
+<div class="faixa-voto" id="faixaVoto">
+  <div class="inner" id="faixaVotoTxt">Entre com sua conta Google para votar. Cada pessoa vota em uma única foto.</div>
+</div>
+
+<div class="stage" id="stage"></div>
+<button class="nav" id="navL" style="display:none">←</button>
+<button class="nav" id="navR" style="display:none">→</button>
+
+<div class="acao-bar" id="acaoBar" style="display:none">
+  <div class="foto-info">
+    <h2 id="infoTitulo"></h2>
+    <p id="infoMeta"></p>
+  </div>
+  <div class="reacoes">
+    <button class="btn-votar" id="btnVotar">🗳️ Votar nesta foto</button>
+    <button class="chip chip-coment" id="chipComent">💬 <span class="n" id="nComent">0</span></button>
+  </div>
+</div>
+<div class="dots" id="dots"></div>
+
+<div class="estado" id="estadoVazio" style="display:none">
+  <div class="icone">📸</div>
+  <h2>As fotos ainda não chegaram</h2>
+  <p>Assim que a organização publicar as fotos do concurso, elas aparecem aqui para votação.</p>
+</div>
+<div class="estado" id="estadoCarregando">
+  <div class="icone">🌿</div>
+  <h2>Carregando o concurso...</h2>
+</div>
+
+<!-- Login para votar -->
+<div class="overlay" id="ovLogin">
+  <div class="modal-box">
+    <button class="fechar" onclick="fecharLogin()">✕</button>
+    <h3>Entrar para votar</h3>
+    <p class="sub">O voto é por pessoa. Entre com sua conta Google e escolha uma única foto para receber seu voto. O voto pode ser trocado, mas você sempre terá apenas um voto ativo.</p>
+    <button class="btn-google" onclick="loginGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
+      Entrar com Google
+    </button>
+    <div class="aviso-envio">Sua conta é usada apenas para garantir um voto por pessoa. Não publicamos seu e-mail.</div>
+  </div>
+</div>
+
+<!-- Painel admin (upload) -->
+<div class="overlay" id="ovAdmin">
+  <div class="modal-box">
+    <button class="fechar" onclick="fecharAdmin()">✕</button>
+    <h3>Área da organização</h3>
+    <p class="sub">Publicação de fotos do concurso. Acesso restrito à organização.</p>
+    <div id="adminLogin">
+      <label for="admCodigo">Código da organização</label>
+      <input type="password" id="admCodigo" placeholder="Digite o código">
+      <button class="btn btn-salvar" onclick="entrarAdmin()">Acessar</button>
+    </div>
+    <div id="adminPainel" style="display:none">
+      <label for="fTitulo">Título da foto</label>
+      <input type="text" id="fTitulo" maxlength="80" placeholder="Ex: Amanhecer no Araguaia">
+      <label for="fAutor">Autor da foto</label>
+      <input type="text" id="fAutor" maxlength="60" placeholder="Nome de quem fotografou">
+      <label for="fCat">Categoria (opcional)</label>
+      <input type="text" id="fCat" maxlength="40" placeholder="Ex: Fauna, Paisagem, Micro">
+      <label>Imagem</label>
+      <div class="drop" id="dropArea">Toque para escolher a imagem ou arraste aqui</div>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+      <div class="previews" id="previews"></div>
+      <div class="barra-prog" id="barraProg"><i id="barraProgFill"></i></div>
+      <button class="btn btn-salvar" id="btnPublicar" onclick="publicarFoto()">Publicar foto no concurso</button>
+      <div class="aviso-envio" id="avisoAdmin"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Ranking -->
+<div class="overlay" id="ovRank">
+  <div class="modal-box">
+    <button class="fechar" onclick="document.getElementById('ovRank').classList.remove('open')">✕</button>
+    <h3>Ranking do concurso</h3>
+    <p class="sub">As fotos mais votadas até agora.</p>
+    <div id="rankLista"></div>
+    <div class="premio-tag">Prêmio especial de R$ 150 · patrocínio Nilo Sander</div>
+  </div>
+</div>
+
+<!-- Visualizador -->
+<div class="viewer" id="viewer">
+  <div class="v-top">
+    <div class="v-title">
+      <h3 id="vTitulo"></h3>
+      <p id="vMeta"></p>
+    </div>
+    <div class="v-tools">
+      <button class="tool tool-votar" id="vBtnVotar" onclick="votarNaAtual()">🗳️ Votar</button>
+      <button class="tool" onclick="fecharViewer()">✕ Fechar</button>
+    </div>
+  </div>
+  <div class="v-img" id="vImgWrap">
+    <img id="vImg" src="" alt="" onclick="this.classList.toggle('zoom')">
+  </div>
+  <div class="v-comentarios">
+    <div class="c-head"><span>Comentários</span><span class="c-count" id="cCount">0</span></div>
+    <div class="c-lista" id="cLista"></div>
+    <div id="cFormWrap"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script>
+/* ============================================================
+   CONCURSO DE FOTOGRAFIA — SEMABIO Vila Rica 2026
+
+   >>> SUBSTITUA a config abaixo pelos valores do SEU projeto
+       Firebase novo (Console > Configurações do projeto > Geral).
+   >>> Ative no Console: Authentication > Google, Realtime Database
+       e Storage. Cole as regras que estão no arquivo REGRAS.txt.
+
+   Estrutura no Realtime Database:
+     concurso/fotos/{id}            -> {titulo, autor, cat, img, path, criadoEm}
+     concurso/comentarios/{id}/{k}  -> {uid, nome, foto, texto, criadoEm}
+     concurso/votosPorFoto/{id}     -> contagem (número)
+     concurso/votoDoUsuario/{uid}   -> id da foto votada
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "COLE_AQUI",
+  authDomain: "COLE_AQUI.firebaseapp.com",
+  databaseURL: "https://COLE_AQUI-default-rtdb.firebaseio.com",
+  projectId: "COLE_AQUI",
+  storageBucket: "COLE_AQUI.appspot.com",
+  messagingSenderId: "COLE_AQUI",
+  appId: "COLE_AQUI"
+};
+
+// Código que a organização digita para liberar o upload.
+// Troque por algo só seu. Isto NÃO é senha de segurança forte,
+// é uma barreira simples: quem tiver o código pode publicar fotos.
+const CODIGO_ORGANIZACAO = "semabio2026";
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database().ref("concurso");
+const storage = firebase.storage();
+const refFotos = db.child("fotos");
+const refComent = db.child("comentarios");
+const refVotosFoto = db.child("votosPorFoto");
+const refVotoUser = db.child("votoDoUsuario");
+
+/* Estado */
+let fotosMap={}, comentMap={}, votosMap={}, fotos=[];
+let cur=0, viewerAberto=false, carregouInicial=false;
+let usuario=null, meuVoto=null, isAdmin=false, arquivoSel=null;
+
+/* ---------- Autenticação ---------- */
+const provider = new firebase.auth.GoogleAuthProvider();
+function loginGoogle(){
+  auth.signInWithPopup(provider).then(()=>{
+    fecharLogin();
+    toast('Bem-vindo(a)! Agora escolha sua foto e vote.');
+  }).catch(err=>{
+    toast('Não foi possível entrar: ' + (err.message||err));
+  });
+}
+function sair(){
+  auth.signOut();
+  toast('Você saiu. Entre de novo para votar.');
+}
+auth.onAuthStateChanged(u=>{
+  usuario = u;
+  if (u){
+    refVotoUser.child(u.uid).on('value', s=>{
+      meuVoto = s.val();
+      atualizarBarra();
+      if (viewerAberto) atualizarViewer();
+      montarCarrossel();
+    });
+  } else {
+    meuVoto = null;
+  }
+  atualizarChipUser();
+  atualizarFaixa();
+  atualizarBarra();
+});
+function atualizarChipUser(){
+  const el = document.getElementById('userNome');
+  const chip = document.getElementById('chipUser');
+  if (usuario){
+    el.textContent = (usuario.displayName||'você').split(' ')[0];
+    chip.innerHTML = (usuario.photoURL?`<img src="${usuario.photoURL}" alt="">`:'👤 ') +
+      `<b>${esc((usuario.displayName||'você').split(' ')[0])}</b>`;
+    chip.onclick = ()=>{ if(confirm('Sair da sua conta?')) sair(); };
+  } else {
+    chip.innerHTML = '👤 <b id="userNome">entrar</b>';
+    chip.onclick = abrirLogin;
+  }
+}
+function atualizarFaixa(){
+  const t = document.getElementById('faixaVotoTxt');
+  if (!usuario){
+    t.innerHTML = '🗳️ Entre com sua conta Google para votar. Cada pessoa vota em uma única foto.';
+  } else if (meuVoto){
+    const f = fotosMap[meuVoto];
+    t.innerHTML = '✅ Seu voto está em: <b>' + esc(f?f.titulo:'uma foto') + '</b>. Você pode trocar votando em outra.';
+  } else {
+    t.innerHTML = '👉 Você está dentro. Escolha uma foto e toque em <b>Votar</b>.';
+  }
+}
+
+/* ---------- Leitura em tempo real ---------- */
+refFotos.once('value').then(()=>{
+  carregouInicial=true;
+  document.getElementById('estadoCarregando').style.display='none';
+  render();
+}).catch(err=>{
+  document.getElementById('estadoCarregando').innerHTML =
+    '<div class="icone">⚠️</div><h2>Não foi possível conectar</h2><p>'+esc(err.message||err)+'</p>';
+});
+refFotos.on('child_added', s=>{ fotosMap[s.key]=s.val(); if(carregouInicial) render(); });
+refFotos.on('child_removed', s=>{ delete fotosMap[s.key]; render(); });
+refVotosFoto.on('value', s=>{ votosMap=s.val()||{}; if(carregouInicial){combinar();atualizarBarra();atualizarMiniVotos();if(viewerAberto)atualizarViewer();} });
+refComent.on('value', s=>{ comentMap=s.val()||{}; if(carregouInicial){combinar();if(viewerAberto){const f=fotos[cur];if(f)renderComentarios(f);}atualizarBarra();} });
+
+function combinar(){
+  fotos = Object.keys(fotosMap).sort().map(id=>{
+    const cm = comentMap[id] ? Object.keys(comentMap[id]).sort().map(k=>comentMap[id][k]) : [];
+    return { id, ...fotosMap[id], votos: votosMap[id]||0, comentarios: cm };
+  });
+}
+
+function render(){
+  combinar();
+  const idAtual = fotos[cur]?fotos[cur].id:null;
+  if (fotos.length===0){
+    document.getElementById('estadoVazio').style.display='block';
+    document.getElementById('acaoBar').style.display='none';
+    document.getElementById('navL').style.display='none';
+    document.getElementById('navR').style.display='none';
+    document.getElementById('stage').innerHTML='';
+    document.getElementById('dots').innerHTML='';
+    document.getElementById('contador').textContent='';
+    return;
+  }
+  document.getElementById('estadoVazio').style.display='none';
+  document.getElementById('acaoBar').style.display='flex';
+  document.getElementById('navL').style.display='flex';
+  document.getElementById('navR').style.display='flex';
+  const novoIdx = idAtual?fotos.findIndex(f=>f.id===idAtual):-1;
+  cur = novoIdx>=0?novoIdx:Math.min(cur,fotos.length-1);
+  montarCarrossel();
+  if (viewerAberto) atualizarViewer();
+}
+
+/* ---------- Carrossel ---------- */
+const stage = document.getElementById('stage');
+function montarCarrossel(){
+  stage.innerHTML='';
+  fotos.forEach((f,i)=>{
+    const c=document.createElement('div');
+    c.className='card'; c.dataset.i=i;
+    const meu = usuario && meuVoto===f.id;
+    c.innerHTML = `
+      <div class="fita"></div>
+      <img src="${f.img}" alt="${esc(f.titulo||'Foto do concurso')}" draggable="false">
+      ${meu?'<div class="selo-meu">✓ meu voto</div>':''}
+      <div class="votos-mini">🗳️ ${f.votos||0}</div>
+      <div class="legenda">${esc(f.titulo||'Sem título')}</div>`;
+    c.addEventListener('click', ()=>{
+      if (Math.abs(dragDX)>8) return;
+      if (i===cur) abrirViewer(); else irPara(i);
+    });
+    stage.appendChild(c);
+  });
+  montarDots(); posicionar(); atualizarBarra();
+}
+function atualizarMiniVotos(){
+  fotos.forEach((f,i)=>{
+    const el = document.querySelector('.card[data-i="'+i+'"] .votos-mini');
+    if (el) el.innerHTML = '🗳️ '+(f.votos||0);
+  });
+}
+function posicionar(fracao=0){
+  const cards=stage.children;
+  for (let k=0;k<cards.length;k++){
+    const off=k-cur-fracao, abs=Math.abs(off), c=cards[k];
+    if (abs>3.2){ c.style.opacity=0; c.style.pointerEvents='none'; continue; }
+    c.style.pointerEvents='auto';
+    const x=off*62, rot=Math.max(-45,Math.min(45,off*-28)), scale=Math.max(.7,1-abs*.14), incl=k%2===0?-1.2:1.4;
+    c.style.zIndex=100-Math.round(abs*10);
+    c.style.opacity=abs>2.6?0:1-abs*.22;
+    c.style.filter=abs<.4?'none':'saturate(.9)';
+    c.style.transform=`translate(calc(-50% + ${x}%), -50%) rotateY(${rot}deg) rotate(${abs<.4?0:incl}deg) scale(${scale})`;
+  }
+}
+function irPara(i){
+  cur=Math.max(0,Math.min(fotos.length-1,i));
+  posicionar(); atualizarDots(); atualizarBarra();
+}
+let dragX=null, dragDX=0;
+stage.addEventListener('pointerdown',e=>{ dragX=e.clientX;dragDX=0;[...stage.children].forEach(c=>c.classList.add('dragging')); });
+window.addEventListener('pointermove',e=>{ if(dragX===null)return; dragDX=e.clientX-dragX; posicionar(-dragDX/(stage.clientWidth*.5)); });
+window.addEventListener('pointerup',()=>{
+  if(dragX===null)return;
+  [...stage.children].forEach(c=>c.classList.remove('dragging'));
+  const limite=stage.clientWidth*.12;
+  if(dragDX<-limite) irPara(cur+1); else if(dragDX>limite) irPara(cur-1); else posicionar();
+  dragX=null; setTimeout(()=>dragDX=0,50);
+});
+document.getElementById('navL').onclick=()=>irPara(cur-1);
+document.getElementById('navR').onclick=()=>irPara(cur+1);
+document.addEventListener('keydown',e=>{
+  if(document.querySelector('.overlay.open'))return;
+  if(e.key==='ArrowLeft'){irPara(cur-1);if(viewerAberto)atualizarViewer();}
+  if(e.key==='ArrowRight'){irPara(cur+1);if(viewerAberto)atualizarViewer();}
+  if(e.key==='Escape')fecharViewer();
+});
+
+/* ---------- Ranking ---------- */
+document.getElementById('btnRank').onclick=()=>{
+  const top=[...fotos].sort((a,b)=>(b.votos||0)-(a.votos||0)).slice(0,5);
+  const medalhas=['🥇','🥈','🥉','4º','5º'];
+  document.getElementById('rankLista').innerHTML = top.length===0
+    ? '<p class="sem-coment">Ainda não há votos para ranquear.</p>'
+    : top.map((f,i)=>`
+      <div class="rank-item" onclick="irPara(${fotos.findIndex(x=>x.id===f.id)});document.getElementById('ovRank').classList.remove('open')">
+        <div class="rank-pos">${medalhas[i]}</div>
+        <img src="${f.img}" alt="">
+        <div class="rank-info"><b>${esc(f.titulo||'Sem título')}</b><span>${esc(f.autor||'')}</span></div>
+        <div class="rank-votos">🗳️ ${f.votos||0}</div>
+      </div>`).join('');
+  document.getElementById('ovRank').classList.add('open');
+};
+
+/* ---------- Dots e barra ---------- */
+function montarDots(){
+  const d=document.getElementById('dots'); d.innerHTML='';
+  fotos.forEach((_,i)=>{ const b=document.createElement('button'); b.className='dot'+(i===cur?' on':''); b.onclick=()=>irPara(i); d.appendChild(b); });
+}
+function atualizarDots(){ [...document.getElementById('dots').children].forEach((b,i)=>b.classList.toggle('on',i===cur)); }
+function dataBR(ms){ if(!ms)return''; try{return new Date(ms).toLocaleDateString('pt-BR');}catch(e){return'';} }
+function atualizarBarra(){
+  const f=fotos[cur]; if(!f){atualizarFaixa();return;}
+  document.getElementById('contador').textContent=`${cur+1} / ${fotos.length}`;
+  document.getElementById('infoTitulo').textContent=f.titulo||'Sem título';
+  const partes=[];
+  if(f.autor)partes.push('por '+esc(f.autor));
+  if(f.cat)partes.push(esc(f.cat));
+  partes.push('🗳️ '+(f.votos||0)+(f.votos===1?' voto':' votos'));
+  document.getElementById('infoMeta').innerHTML=partes.join(' · ');
+  document.getElementById('nComent').textContent=(f.comentarios||[]).length;
+  const bv=document.getElementById('btnVotar');
+  if(usuario && meuVoto===f.id){ bv.classList.add('votado'); bv.innerHTML='✓ Você votou aqui'; }
+  else { bv.classList.remove('votado'); bv.innerHTML='🗳️ Votar nesta foto'; }
+  atualizarFaixa();
+}
+
+/* ---------- Votar ---------- */
+function votar(fotoId){
+  if(!usuario){ abrirLogin(); return; }
+  if(meuVoto===fotoId){ toast('Este já é o seu voto. Vote em outra para trocar.'); return; }
+  const anterior = meuVoto;
+  const updates = {};
+  updates['votoDoUsuario/'+usuario.uid] = fotoId;
+  db.update(updates).then(()=>{
+    refVotosFoto.child(fotoId).transaction(v=>(v||0)+1);
+    if(anterior) refVotosFoto.child(anterior).transaction(v=>Math.max(0,(v||0)-1));
+    soltarFloaters('🗳️',8);
+    toast(anterior?'Voto trocado!':'Voto registrado! Obrigado por participar.');
+  }).catch(err=>toast('Erro ao votar: '+(err.message||err)));
+}
+document.getElementById('btnVotar').onclick=function(){
+  const f=fotos[cur]; if(!f)return;
+  this.classList.remove('pop'); void this.offsetWidth; this.classList.add('pop');
+  votar(f.id);
+};
+function votarNaAtual(){ const f=fotos[cur]; if(f) votar(f.id); }
+
+/* ---------- Visualizador ---------- */
+function abrirViewer(){
+  const f=fotos[cur]; if(!f)return;
+  viewerAberto=true;
+  document.getElementById('viewer').classList.add('open');
+  atualizarViewer();
+}
+function fecharViewer(){ viewerAberto=false; document.getElementById('viewer').classList.remove('open'); }
+function atualizarViewer(){
+  const f=fotos[cur]; if(!f)return;
+  document.getElementById('vTitulo').textContent=f.titulo||'Sem título';
+  const partes=[]; if(f.autor)partes.push('por '+esc(f.autor)); if(f.cat)partes.push(esc(f.cat));
+  partes.push('🗳️ '+(f.votos||0));
+  document.getElementById('vMeta').innerHTML=partes.join(' · ');
+  document.getElementById('vImg').src=f.img;
+  document.getElementById('vImg').classList.remove('zoom');
+  const vb=document.getElementById('vBtnVotar');
+  if(usuario && meuVoto===f.id){ vb.classList.add('votado'); vb.innerHTML='✓ Votado'; }
+  else { vb.classList.remove('votado'); vb.innerHTML='🗳️ Votar'; }
+  renderComentarios(f);
+}
+document.getElementById('chipComent').onclick=abrirViewer;
+
+/* ---------- Comentários ---------- */
+function renderComentarios(f){
+  const lista=document.getElementById('cLista');
+  document.getElementById('cCount').textContent=(f.comentarios||[]).length;
+  lista.innerHTML = (f.comentarios||[]).length===0
+    ? '<p class="sem-coment">Ainda sem comentários. Seja o primeiro.</p>'
+    : f.comentarios.map(c=>`
+      <div class="c-item">
+        <div class="c-autor">${c.foto?`<img src="${c.foto}" alt="">`:'👤'} ${esc(c.nome||'Anônimo')}</div>
+        <div class="c-texto">${esc(c.texto)}</div>
+        <div class="c-data">${dataBR(c.criadoEm)}</div>
+      </div>`).join('');
+  const wrap=document.getElementById('cFormWrap');
+  if(usuario){
+    wrap.innerHTML=`
+      <div class="c-form">
+        <textarea id="cInput" rows="1" maxlength="300" placeholder="Escreva um comentário..."></textarea>
+        <button class="btn btn-env" onclick="enviarComentario()">Enviar</button>
+      </div>`;
+  } else {
+    wrap.innerHTML=`<div class="c-login-aviso">Para comentar, <a onclick="abrirLogin()">entre com sua conta Google</a>.</div>`;
+  }
+}
+function enviarComentario(){
+  const f=fotos[cur]; if(!f||!usuario)return;
+  const inp=document.getElementById('cInput');
+  const txt=inp.value.trim(); if(!txt)return;
+  refComent.child(f.id).push({
+    uid:usuario.uid,
+    nome:(usuario.displayName||'Anônimo'),
+    foto:usuario.photoURL||'',
+    texto:txt,
+    criadoEm:firebase.database.ServerValue.TIMESTAMP
+  }).then(()=>{ inp.value=''; }).catch(err=>toast('Erro ao comentar: '+(err.message||err)));
+}
+
+/* ---------- Login modal ---------- */
+function abrirLogin(){ document.getElementById('ovLogin').classList.add('open'); }
+function fecharLogin(){ document.getElementById('ovLogin').classList.remove('open'); }
+
+/* ---------- Admin: upload ---------- */
+// Abre o painel admin com toque triplo no título (discreto) ou tecla "A"
+let toqueTitulo=0, toqueTimer=null;
+document.querySelector('.brand h1').addEventListener('click',()=>{
+  toqueTitulo++;
+  clearTimeout(toqueTimer);
+  toqueTimer=setTimeout(()=>toqueTitulo=0,800);
+  if(toqueTitulo>=3){ toqueTitulo=0; document.getElementById('ovAdmin').classList.add('open'); }
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='A'&&e.shiftKey&&!document.querySelector('.overlay.open')){
+    document.getElementById('ovAdmin').classList.add('open');
+  }
+});
+function fecharAdmin(){ document.getElementById('ovAdmin').classList.remove('open'); }
+function entrarAdmin(){
+  const cod=document.getElementById('admCodigo').value.trim();
+  if(cod===CODIGO_ORGANIZACAO){
+    isAdmin=true;
+    document.getElementById('adminLogin').style.display='none';
+    document.getElementById('adminPainel').style.display='block';
+  } else {
+    toast('Código incorreto.');
+  }
+}
+const fileInput=document.getElementById('fileInput');
+const dropArea=document.getElementById('dropArea');
+dropArea.onclick=()=>fileInput.click();
+dropArea.ondragover=e=>{e.preventDefault();dropArea.classList.add('over');};
+dropArea.ondragleave=()=>dropArea.classList.remove('over');
+dropArea.ondrop=e=>{e.preventDefault();dropArea.classList.remove('over');selecionarArquivo(e.dataTransfer.files[0]);};
+fileInput.onchange=()=>selecionarArquivo(fileInput.files[0]);
+function selecionarArquivo(file){
+  if(!file||!file.type.startsWith('image/')){toast('Selecione uma imagem.');return;}
+  arquivoSel=file;
+  const pv=document.getElementById('previews');
+  pv.innerHTML='';
+  const img=document.createElement('img');
+  img.src=URL.createObjectURL(file);
+  pv.appendChild(img);
+  dropArea.textContent=file.name;
+}
+function comprimir(file){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=1600; let w=img.width,h=img.height;
+      if(Math.max(w,h)>MAX){ const f=MAX/Math.max(w,h); w=Math.round(w*f); h=Math.round(h*f); }
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      cv.toBlob(b=>{ URL.revokeObjectURL(img.src); resolve(b); },'image/jpeg',0.85);
+    };
+    img.onerror=reject;
+    img.src=URL.createObjectURL(file);
+  });
+}
+function publicarFoto(){
+  if(!isAdmin)return;
+  const titulo=document.getElementById('fTitulo').value.trim();
+  const autor=document.getElementById('fAutor').value.trim();
+  const cat=document.getElementById('fCat').value.trim();
+  if(!titulo){ toast('Dê um título à foto.'); return; }
+  if(!arquivoSel){ toast('Escolha uma imagem.'); return; }
+  const btn=document.getElementById('btnPublicar');
+  btn.disabled=true;
+  const barra=document.getElementById('barraProg');
+  const fill=document.getElementById('barraProgFill');
+  barra.classList.add('on');
+  comprimir(arquivoSel).then(blob=>{
+    const id=refFotos.push().key;
+    const path='concurso/'+id+'.jpg';
+    const task=storage.ref(path).put(blob,{contentType:'image/jpeg'});
+    task.on('state_changed',
+      snap=>{ fill.style.width=Math.round((snap.bytesTransferred/snap.totalBytes)*100)+'%'; },
+      err=>{ toast('Erro no upload: '+(err.message||err)); btn.disabled=false; barra.classList.remove('on'); },
+      ()=>{
+        task.snapshot.ref.getDownloadURL().then(url=>{
+          db.update({
+            ['fotos/'+id]:{ titulo, autor, cat, img:url, path, criadoEm:firebase.database.ServerValue.TIMESTAMP },
+            ['votosPorFoto/'+id]:0
+          }).then(()=>{
+            toast('Foto publicada!');
+            document.getElementById('fTitulo').value='';
+            document.getElementById('fAutor').value='';
+            document.getElementById('fCat').value='';
+            document.getElementById('previews').innerHTML='';
+            dropArea.textContent='Toque para escolher a imagem ou arraste aqui';
+            arquivoSel=null; btn.disabled=false; barra.classList.remove('on'); fill.style.width='0';
+          });
+        });
+      });
+  }).catch(err=>{ toast('Erro ao processar imagem: '+(err.message||err)); btn.disabled=false; barra.classList.remove('on'); });
+}
+
+/* ---------- Utilitários ---------- */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function toast(msg){
+  let t=document.querySelector('.toast');
+  if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); }
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove('show'),2600);
+}
+function soltarFloaters(emoji,qtd){
+  for(let i=0;i<qtd;i++){
+    const f=document.createElement('div');
+    f.className='floater'; f.textContent=emoji;
+    f.style.left=(Math.random()*90+5)+'vw';
+    f.style.setProperty('--dur',(2+Math.random()*1.5)+'s');
+    f.style.setProperty('--drift',(Math.random()*120-60)+'px');
+    f.style.setProperty('--giro',(Math.random()*180-90)+'deg');
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),3600);
+  }
+}
+</script>
+</body>
+</html>

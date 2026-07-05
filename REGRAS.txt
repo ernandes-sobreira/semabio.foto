@@ -1,0 +1,132 @@
+========================================================
+REGRAS DE SEGURANÇA — CONCURSO SEMABIO VILA RICA 2026
+========================================================
+
+Sem estas regras, qualquer pessoa consegue votar várias vezes ou
+apagar fotos pelo console do navegador. O bloqueio de verdade está
+AQUI, não no JavaScript da página. Copie e cole no Console do Firebase.
+
+
+--------------------------------------------------------
+1) REALTIME DATABASE  (Console > Realtime Database > Regras)
+--------------------------------------------------------
+
+{
+  "rules": {
+    "concurso": {
+
+      "fotos": {
+        ".read": true,
+        ".write": false
+      },
+
+      "votosPorFoto": {
+        ".read": true,
+        "$fotoId": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber()"
+        }
+      },
+
+      "votoDoUsuario": {
+        ".read": false,
+        "$uid": {
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null && auth.uid == $uid",
+          ".validate": "newData.isString()"
+        }
+      },
+
+      "comentarios": {
+        ".read": true,
+        "$fotoId": {
+          "$comentId": {
+            ".write": "auth != null && !data.exists() && newData.child('uid').val() == auth.uid",
+            ".validate": "newData.hasChildren(['uid','nome','texto','criadoEm'])"
+          }
+        }
+      }
+    }
+  }
+}
+
+O que estas regras garantem:
+- fotos: qualquer um lê, ninguém escreve pela página. O upload do
+  admin funciona porque você vai publicar as fotos estando logado
+  como você mesmo? NÃO. Veja a observação importante mais abaixo (*)
+- votoDoUsuario/{uid}: cada pessoa só escreve no PRÓPRIO caminho.
+  Ninguém vota pelo uid de outra pessoa. Um uid = um voto.
+- comentarios: só logado comenta; não dá para editar o comentário
+  de outra pessoa (!data.exists()).
+
+
+(*) OBSERVAÇÃO IMPORTANTE SOBRE O UPLOAD DO ADMIN
+--------------------------------------------------------
+A regra acima deixa "fotos" com escrita FALSE para todo mundo, o que
+bloquearia também o seu upload. Você tem duas opções:
+
+OPÇÃO A (mais simples, recomendada para o evento):
+Antes do concurso, troque temporariamente a regra de "fotos" e
+"votosPorFoto" para permitir escrita autenticada, publique todas as
+fotos logado com sua conta Google, e depois volte para ".write": false.
+Regra temporária:
+  "fotos": { ".read": true, ".write": "auth != null" },
+
+OPÇÃO B (trava por conta de admin):
+Descubra o seu uid (aparece no Console > Authentication depois de você
+logar uma vez) e fixe na regra:
+  "fotos": {
+    ".read": true,
+    ".write": "auth != null && auth.uid == 'SEU_UID_AQUI'"
+  }
+Assim só a sua conta publica fotos, e o código da organização deixa
+de ser necessário como segurança (vira só conveniência da interface).
+
+A OPÇÃO B é a mais segura. O código "semabio2026" no HTML é apenas uma
+barreira leve: quem ler o código-fonte da página o encontra. Para o
+upload de fotos ser realmente protegido, use a trava por uid (Opção B).
+
+
+--------------------------------------------------------
+2) STORAGE  (Console > Storage > Regras)
+--------------------------------------------------------
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /concurso/{arquivo} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.uid == 'SEU_UID_AQUI'
+                   && request.resource.size < 3 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
+
+Troque 'SEU_UID_AQUI' pelo seu uid (Console > Authentication). Assim
+só você envia imagens, no máximo 3 MB, e apenas imagens.
+Se preferir a via simples, troque a linha do uid por
+"request.auth != null" enquanto publica e endureça depois.
+
+
+--------------------------------------------------------
+3) AUTHENTICATION  (Console > Authentication > Sign-in method)
+--------------------------------------------------------
+Ative o provedor "Google". Sem isso, o botão "Entrar com Google"
+não funciona.
+
+Em Authentication > Settings > Domínios autorizados, adicione o
+domínio onde a página vai rodar (ex: seu-usuario.github.io).
+
+
+--------------------------------------------------------
+LIMITE HONESTO QUE VOCÊ JÁ SABE
+--------------------------------------------------------
+Login por conta Google impede voto repetido pelo mesmo aparelho e pela
+mesma conta. NÃO impede uma pessoa determinada de criar várias contas
+Gmail e votar várias vezes. Para um prêmio de R$150, alguém motivado
+consegue. Se o resultado for apertado e contestado, a organização
+precisa ter uma regra combinada antes (ex: em caso de diferença menor
+que X votos, decisão vai para uma curadoria). Isso é decisão de
+organização, não de código.
