@@ -678,11 +678,11 @@ function atualizarContagemAdmin(){
     cont.style.color = '';
     if(btn && btn.textContent==='Limite de 50 fotos atingido'){ btn.disabled=false; btn.textContent='Publicar foto'; }
   }
-  const cont=document.getElementById('admListaFotos');
-  if(!cont) return;
-  if(fotos.length===0){ cont.className='adm-lista'; cont.innerHTML=''; return; }
-  cont.className='adm-lista on';
-  cont.innerHTML=fotos.map(f=>`
+  const listaCont=document.getElementById('admListaFotos');
+  if(!listaCont) return;
+  if(fotos.length===0){ listaCont.className='adm-lista'; listaCont.innerHTML=''; return; }
+  listaCont.className='adm-lista on';
+  listaCont.innerHTML=fotos.map(f=>`
     <div class="adm-foto" data-id="${f.id}">
       <div class="mini" id="admmini-${f.id}"></div>
       <div class="info"><b>${esc(f.titulo||'Sem título')}</b><span>${esc(f.autor||'')} · 🗳️ ${f.votos||0}</span></div>
